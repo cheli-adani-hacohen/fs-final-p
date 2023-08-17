@@ -29,14 +29,16 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
-export default function Login({handleLogin}) {
+export default function Login({ handleLogin }) {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const navigate = useNavigate(); // הוספת ה-navigate hook
+  const [username, setUsername] = useState();
+  const [userPassword, setPassword] = useState();
   useEffect(() => {
     if (loggedInUser != null) {
       localStorage.setItem("user", JSON.stringify(loggedInUser));
     }
-  }, [loggedInUser]);
+  }, []);
 
   useEffect(() => {
     // in case user already connected
@@ -54,46 +56,37 @@ export default function Login({handleLogin}) {
   };
 
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
 
     const userdata = {
-      username: data.get('username'),
-      password: data.get('password'),
+      username,
+      password: userPassword,
     };
 
-    fetch("http://localhost:3500/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userdata),
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error("פרטי ההתחברות שגויים");
-        }
-      })
-      .then((user) => {
-        setLoggedInUser(user);
-        //update localStoarge
-        localStorage.setItem("user", JSON.stringify(user)); ////////////////////?
-        console.log("naviget users");        
-        navigate('/');
-
-        // setLogin(false); //DELETE IT?
-        handleLogin();
-
-      })
-      .catch((error) => {
-        console.log("ERROR");
+    try {
+      const response = await fetch("http://localhost:3500/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(userdata)
       });
 
-
+      if (response.ok) {
+        const user = await response.json();
+        setLoggedInUser(user);
+        localStorage.setItem("user", JSON.stringify(user));
+        navigate('/');
+        handleLogin();
+      } else {
+        throw new Error("פרטי ההתחברות שגויים");
+      }
+    } catch (error) {
+      console.log("ERROR:", error);
+    }
   };
+
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -139,7 +132,10 @@ export default function Login({handleLogin}) {
                 name="username"
                 autoComplete="username"
                 autoFocus
+                value={username} // מקשר את הערך ל-state
+                onChange={(event) => setUsername(event.target.value)} // טיפול בשינוי ב-state
               />
+
               <TextField
                 margin="normal"
                 required
@@ -149,7 +145,11 @@ export default function Login({handleLogin}) {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                value={userPassword} // מקשר את הערך ל-state
+                onChange={(event) => setPassword(event.target.value)} // טיפול בשינוי ב-state
               />
+
+
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"

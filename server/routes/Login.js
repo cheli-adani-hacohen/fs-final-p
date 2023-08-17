@@ -1,73 +1,59 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../database/db");
+// const db = require("../database/db");
 
 const bodyParser = require("body-parser");
 router.use(bodyParser.json());
 
+const User = require('../moduls/User');
+const Password = require('../moduls/Password');
+
 // POST login
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   const { password, username } = req.body;
 
-  // Check the credentials against the database
-  db.getConnection((err, connection) => {
-    if (err) {
-      console.error("Error connecting to database:", err);
-      return res.status(500).send("An error occurred");
+  if (!password || !username) {
+    return res.status(400).send("Both username and password are required.");
+  }
+
+  try {
+    const userId = await Password.authenticateUser(username, password);
+    if (!userId) {
+      return res.status(401).send("Invalid username or password");
     }
-    const query = "SELECT * FROM passwords WHERE username = ? AND password = ?";
-    connection.query(query, [username, password], (err, results) => {
-      connection.release(); // Release the connection
 
-      if (err) {
-        console.error("Error executing query:", err);
-        return res.status(500).send("An error occurred");
-      } else if (results.length === 0) {
-        return res.status(401).send("Invalid username or password");
-      } else {
-        // Successful login
-        console.log("Logged in successfully");
-        const id = results[0].userId; // Access the 'id' property of the first element
-        console.log("result: "+id);
-        console.log(results[0]);
-        connection.query(
-          "SELECT * FROM users WHERE id = ?",
-          id,
-          (err, results) => {
-            if (err) {
-              console.error("Error executing query:", err);
-              return res.status(500).send("An error occurred");
-            } else if (results.length === 0) {
-              return res.status(401).send("Invalid username or password");
-            } else {
-              res.json(results[0]);
-              console.log(results[0]);
-            }
-          }
-        );
-      }
-    });
-  });
+    const userInfo = await User.findByPk(userId);
+
+    if (!userInfo) {
+      return res.status(500).send("Internal Server Error");
+    }
+    res.status(200).json(userInfo);
+    console.log("Logged in successfully");
+    console.log("result: " + userInfo.id);
+  } catch (error) {
+    console.error("Error:", error);
+    return res.status(500).send("An error occurred");
+  }
 });
 
-// POST user
-router.post("/", (req, res) => {
-  const user = {
-    id: 1, // TODO id from DB
-    name: req.body.name,
-    username: req.body.username,
-    email: req.body.email,
-    address: req.body.address,
-    phone: req.body.phone,
-    website: req.body.website,
-    company: req.body.company,
-  };
+// // POST user
+// router.post("/", (req, res) => {
+//   const user = {
+//     id: 1, // TODO id from DB
+//     name: req.body.name,
+//     username: req.body.username,
+//     email: req.body.email,
+//     address: req.body.address,
+//     phone: req.body.phone,
+//     website: req.body.website,
+//     company: req.body.company,
+//   };
 
-  // check if user already exists in DB -> if true, return?
-  // add user to DB
+//   // check if user already exists in DB -> if true, return?
+//   // add user to DB
 
-  res.send(user);
-});
+//   res.send(user);
+// });
 
 //שינוי סיסמה
 
