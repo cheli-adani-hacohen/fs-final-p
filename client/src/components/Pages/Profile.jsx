@@ -54,14 +54,14 @@ function Profile() {
         <Grid container spacing={2} alignItems="center">
           <Grid item>
             <Avatar
-              alt={`${userData["name.firstname"]} ${userData["name.lastname"]}`}
+              alt={`${userData["name_firstname"]} ${userData["name_lastname"]}`}
               src={userData["profile_picture"]} // Change is made here
               sx={{ width: 100, height: 100 }}
             />
           </Grid>
           <Grid item>
             <Typography variant="h4">
-              {userData["name.firstname"]} {userData["name.lastname"]}
+              {userData["name_firstname"]} {userData["name_lastname"]}
             </Typography>
             <Typography variant="subtitle1">
               <a href={`mailto:${userData.email}`}>{userData.email}</a>
@@ -72,7 +72,7 @@ function Profile() {
       <CardContent>
         <Typography variant="h6">Address:</Typography>
         <Typography>
-          {address.number} {address.street}, {address.city}, {address.zipcode}
+          {userData["address_number"]} {userData["address_street"]}, {userData["address_city"]}, {userData["address_zipcode"]}
         </Typography>
       </CardContent>
     </Card>

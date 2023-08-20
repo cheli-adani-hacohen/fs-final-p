@@ -8,7 +8,6 @@ router.use(bodyParser.json());
 const User = require('../moduls/User');
 const Password = require('../moduls/Password');
 
-// POST login
 router.post("/", async (req, res) => {
   const { password, username } = req.body;
 
@@ -18,11 +17,15 @@ router.post("/", async (req, res) => {
 
   try {
     const userId = await Password.authenticateUser(username, password);
+    console.log("\npassword 2: \x1b[1m"+userId+"\x1b[0m\n");
     if (!userId) {
       return res.status(401).send("Invalid username or password");
     }
+    console.log("\n\x1b[1m"+userId+"\x1b[0m\n");
 
-    const userInfo = await User.findByPk(userId);
+    // Use User model to fetch user info
+    const userInfo = await User.findUserById(userId);
+    console.log("\ndata:\x1b[1m"+userInfo+"\x1b[0m\n");
 
     if (!userInfo) {
       return res.status(500).send("Internal Server Error");

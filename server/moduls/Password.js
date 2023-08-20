@@ -22,14 +22,19 @@ const Password = db.define("Password", {
 
 async function authenticateUser(myUsername, myPassword) {
   try {
-    const userId = await Password.findOne({
+    const userIdArray = await Password.findOne({
       where: {
         username: myUsername,
         password: myPassword,
       },
       attributes: ["userId"]
     });
-    return (userId?userId:false);
+
+    const userId = userIdArray ? userIdArray.userId : false; // או כל ערך אחר שתרצה לשים במקרה שאין תוצאה
+    
+    console.log("\npassword: \x1b[1m"+userId+"\x1b[0m\n");
+
+    return userId;
   } catch (error) {
     console.error("Error fetching password:", error);
     throw new Error("An error occurred while fetching password");
