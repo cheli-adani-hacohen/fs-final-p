@@ -10,16 +10,17 @@ function App() {
   const [userId, setUserId] = useState(null);
   const [logoutChange, setLogoutChange] = useState(null);
 
-  const handleLogout = () => {
-    localStorage.removeItem('user');
-    setLogoutChange('logout');
-  };
+  useEffect(() => {
+    // קריאה לשרת בהתחלה
+    fetchAndStoreProducts();
 
-  const handleLogin = (user) => {
-   // JSON.stringify(user)
-    setLogoutChange('login');
-  };
-
+    // פונקציה שתופעל בעת יציאה מהעמוד
+    return () => {
+      // מחיקת המידע מה-LocalStorage
+      localStorage.removeItem('products');
+    };
+  }, []);  
+  
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
     if (user) {
@@ -30,6 +31,18 @@ function App() {
       setUserId(null);
     }
   }, [logoutChange]);
+
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    setLogoutChange('logout');
+  };
+
+  const handleLogin = (user) => {
+   // JSON.stringify(user)
+    setLogoutChange('login');
+  };
+
 
   return (
      <div style={{ display: 'flex', flexDirection: 'column'}}>
@@ -47,3 +60,16 @@ function App() {
 }
 
 export default App;
+
+function fetchAndStoreProducts() {
+  fetch('http://localhost:3500/api/products')
+    .then(response => response.json())
+    .then(products => {
+      // אחסון המוצרים ב-LocalStorage
+      localStorage.setItem('products', JSON.stringify(products));
+      console.log('מוצרים נשמרו ב-LocalStorage:', products);
+    })
+    .catch(error => {
+      console.error('שגיאה בקבלת המוצרים:', error);
+    });
+}

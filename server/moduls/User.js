@@ -14,7 +14,7 @@ const User = db.define('User', {
   },
   name_lastname: {
     type: DataTypes.STRING(25),
-    field:"name.lastname"
+    field: "name.lastname"
   },
   email: {
     type: DataTypes.STRING(320),
@@ -26,23 +26,33 @@ const User = db.define('User', {
   },
   address_city: {
     type: DataTypes.STRING(30),
-    field:"address.city"
+    field: "address.city"
   },
   address_street: {
     type: DataTypes.STRING(30),
-    field:"address.street"
+    field: "address.street"
   },
   address_number: {
     type: DataTypes.SMALLINT,
-    field:"address.number"
+    field: "address.number"
   },
   address_zipcode: {
     type: DataTypes.STRING(10),
-    field:"address.zipcode"
+    field: "address.zipcode"
   },
   profile_picture: {
     type: DataTypes.STRING(300)
+  },
+  updated_at: {
+    type: DataTypes.DATE,
+    allowNull: true,
+    defaultValue: db.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
   }
+}, {
+  timestamps: false,
+  engine: 'InnoDB',
+  charset: 'utf8mb4',
+  collate: 'utf8mb4_0900_ai_ci',
 });
 
 async function findUserById(userId) {

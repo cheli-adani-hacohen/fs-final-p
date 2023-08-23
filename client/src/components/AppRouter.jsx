@@ -1,42 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, NavLink, Switch, Routes } from 'react-router-dom';
+// AppRouter.js
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
 
 import Home from './Pages/Home';
 import Categories from './Pages/Categories';
 import Login from "./Pages/Login";
 import About from "./Pages/About";
-// import Register from "./Pages/Register";
-// import Info from "./Pages/Info";
-// import Error from "./Pages/Error";
 import Cart from "./Pages/Cart";
 import MyWishList from "./Pages/MyWishList";
 import Profile from './Pages/Profile';
+import Products from './Pages/Products';
 
-const AppRouter = ({userId, handleLogin}) => {
-
-
-
+const AppRouter = ({ userId, handleLogin }) => {
   return (
     <Routes>
-      <Route path="/home" exact element={<Home />} />
+      <Route path="/" element={<Home />} />
+      <Route path="/home" element={<Home />} />
       <Route path="/categories" element={<Categories />} />
+      <Route path="/products/:categoryid" element={<Products />} />
       <Route path="/about" element={<About />} />
       <Route path="/users/:userid/cart" element={<Cart />} />
       <Route path="/users/:userid/wishlist" element={<MyWishList />} />
       <Route path="/users/:userid/profile" element={<Profile />} />
-      <Route path= '/login' element = {<Login handleLogin={handleLogin}/>}/>
+      <Route path="/login" element={<Login handleLogin={handleLogin} />} />
     </Routes>
   );
 };
 
 export default AppRouter;
-// const myRoutes = [
-//   { path: '/', component: Home },
-//   { path: '/categories', component: Categories },
-//   { path: '/about', component: About },
-//   { path: '/login', component: Login },
-//   { path: '/users/:userId/Profile', component: Profile },
-//   { path: '/users/:userId/cart', component: Cart },
-//   { path: '/users/:userId/wishlist', component: MyWishList },
-
-// ];

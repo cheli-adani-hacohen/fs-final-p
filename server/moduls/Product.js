@@ -14,22 +14,26 @@ const Product = db.define('Product', {
   price: {
     type: DataTypes.DECIMAL(10, 2),
     allowNull: false
-  }, 
+  },
   description: {
-    type: DataTypes.TEXT
+    type: DataTypes.TEXT,
+    allowNull: true
   },
   category: {
-    type: DataTypes.ENUM('Men\'s Clothing', 'Jewelry', 'Electronics', "Women's Clothing"),
+    type: DataTypes.ENUM('Men\'s Clothing', 'Jewelry', 'Electronics', 'Women\'s Clothing'),
     allowNull: false
   },
   image: {
-    type: DataTypes.STRING(255)
+    type: DataTypes.STRING(255),
+    allowNull: true
   },
   rating_rate: {
-    type: DataTypes.DECIMAL(3, 1)
+    type: DataTypes.DECIMAL(3, 1),
+    allowNull: true
   },
   rating_count: {
-    type: DataTypes.INTEGER
+    type: DataTypes.INTEGER,
+    allowNull: true
   },
   addition_date: {
     type: DataTypes.DATE,
@@ -38,8 +42,32 @@ const Product = db.define('Product', {
   discount: {
     type: DataTypes.INTEGER,
     defaultValue: 0
+  },
+  updated_at: {
+    type: DataTypes.DATE,
+    allowNull: true,
+    defaultValue:db.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
   }
+}, {
+  timestamps: false,
+  engine: 'InnoDB',
+  charset: 'utf8mb4',
+  collate: 'utf8mb4_0900_ai_ci',
 });
+
+//Get all products
+async function getAllProducts() {
+  try {
+    const products = await Product.findAll();
+   // console.log("\nproducts: \x1b[1m"+products+"\x1b[0m\n");
+
+    return products;
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    throw new Error('An error occurred while fetching products');
+  }
+}
+
 
 // שאילתת SELECT פשוטה לשליפת מידע ממוצר על פי ID
 async function getProductById(productId) {
@@ -105,4 +133,4 @@ async function countProductsInCategory(category) {
   
 
 
-module.exports = {Product, getUniqueCategories};
+module.exports = {Product, getUniqueCategories, getAllProducts};

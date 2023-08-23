@@ -10,19 +10,27 @@ const Cart = db.define('Cart', {
   },
   userId: {
     type: DataTypes.INTEGER,
-    references: {
-      model: User,
-      key: 'id'
-    },
     allowNull: false
   },
   date: {
-    type: DataTypes.DATE
+    type: DataTypes.DATE,
+    allowNull: true
   },
   status: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
+  updated_at: {
+    type: DataTypes.DATE,
+    allowNull: true,
+    defaultValue: db.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
   }
+}, {
+  timestamps: false,
+  engine: 'InnoDB',
+  charset: 'utf8mb4',
+  collate: 'utf8mb4_0900_ai_ci',
 });
+
 
 module.exports = Cart;
