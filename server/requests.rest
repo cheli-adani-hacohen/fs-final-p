@@ -1,0 +1,5 @@
+###
+### Example API Requests
+###
+
+GET http://localhost:3500/api/carts/3

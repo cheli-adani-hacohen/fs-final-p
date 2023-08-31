@@ -3,7 +3,7 @@ const db = require('../database/db');
 const Cart = require('./Cart');
 const Product = require('./Product');
 
-const CartProduct = db.define('CartProduct', {
+const CartProduct = db.define('cartproducts', {
   cartId: {
     type: DataTypes.INTEGER,
     allowNull: false
@@ -28,4 +28,20 @@ const CartProduct = db.define('CartProduct', {
   collate: 'utf8mb4_0900_ai_ci',
 });
 
-module.exports = CartProduct;
+async function getMatchingCartProducts(cartId) {
+  try {
+    const cartProducts = await CartProduct.findAll({
+      where: {
+        cartId: cartId
+      },
+      attributes: ['productId', 'quantity'] 
+    });
+    return cartProducts;
+  } catch (error) {
+    console.error('Error getting matching cart products:', error);
+    return [];
+  }
+}
+
+
+module.exports = {CartProduct, getMatchingCartProducts};

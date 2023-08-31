@@ -17,22 +17,22 @@ router.post("/", async (req, res) => {
 
   try {
     const userId = await Password.authenticateUser(username, password);
-    console.log("\npassword 2: \x1b[1m"+userId+"\x1b[0m\n");
+    // console.log("\npassword 2: \x1b[1m"+userId+"\x1b[0m\n");
     if (!userId) {
       return res.status(401).send("Invalid username or password");
     }
-    console.log("\n\x1b[1m"+userId+"\x1b[0m\n");
+    // console.log("\n\x1b[1m"+userId+"\x1b[0m\n");
 
     // Use User model to fetch user info
     const userInfo = await User.findUserById(userId);
-    console.log("\ndata:\x1b[1m"+userInfo+"\x1b[0m\n");
+    // console.log("\ndata:\x1b[1m"+userInfo+"\x1b[0m\n");
 
     if (!userInfo) {
       return res.status(500).send("Internal Server Error");
     }
     res.status(200).json(userInfo);
-    console.log("Logged in successfully");
-    console.log("result: " + userInfo.id);
+    // console.log("Logged in successfully");
+    // console.log("result: " + userInfo.id);
   } catch (error) {
     console.error("Error:", error);
     return res.status(500).send("An error occurred");

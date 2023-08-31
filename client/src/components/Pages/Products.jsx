@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ProductCard from './ProductCard';
+import Product from './Product';
 
 import { useParams } from 'react-router-dom';
 
@@ -28,10 +29,25 @@ function Products() {
   }, []);
 
   
+  const onAddToCart = (productId) => {
+    const updatedCartData = JSON.parse(sessionStorage.getItem("cartData"));
+    // ... כאן יש לעדכן את updatedCartData בהתאם למוצר שנבחר להוספה לעגלה
+    sessionStorage.setItem("cartData", JSON.stringify(updatedCartData));
+  };
+  const handleAddToCart = (productId) => {
+
+  };
+
+  const handleAddToWishlist = (productId) => {
+    // Logic to add the product to the wishlist
+  };
+
   return (
     <div>
       {products.map((product) => (
-        <ProductCard key={product.id} {...product} />
+        <Product key={product.id} product={product} onAddToCart={handleAddToCart}
+          onAddToWishlist={handleAddToWishlist} />
+        // <ProductCard key={product.id} {...product} />
       ))}
     </div>
   );

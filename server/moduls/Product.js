@@ -120,7 +120,7 @@ async function countProductsInCategory(category) {
       });
   
       const categoryNames = categories.map(category => category.category);
-      console.log(categoryNames);
+      // console.log(categoryNames);
       return (categoryNames.map((name, index) => ({
         id: index + 1,
         name: name
@@ -133,4 +133,4 @@ async function countProductsInCategory(category) {
   
 
 
-module.exports = {Product, getUniqueCategories, getAllProducts};
+module.exports = {Product, getUniqueCategories, getAllProducts, getProductById};
