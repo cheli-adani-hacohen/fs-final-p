@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 // const db = require('../database/db');
-const Cart = require('../moduls/Cart');
-const CartProduct = require('../moduls/CartProduct');
-const Product = require('../moduls/Product');
+const Cart = require('../models/Cart');
+const CartProduct = require('../models/CartProduct');
+const Product = require('../models/Product');
 
 
 // router.get('/',cart.getAllCarts)

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require('../database/db');
-const Product = require('../moduls/Product');
+const Product = require('../models/Product');
 
 const bodyParser = require("body-parser");
 router.use(bodyParser.json());
